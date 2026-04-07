@@ -2,121 +2,233 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>OKNT – Minigra</title>
+    <title>OKNT – Minigierka</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             background: #050509;
             color: #f5f5f5;
             font-family: system-ui, sans-serif;
-            text-align: center;
             margin: 0;
             padding: 0;
         }
 
         h1 {
-            margin-top: 40px;
+            margin-top: 20px;
+            text-align: center;
             letter-spacing: 0.15em;
+        }
+
+        #layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 10px 20px;
+        }
+
+        #left { flex: 2; }
+        #right {
+            flex: 1;
+            background: #0b0b12;
+            border: 1px solid #1b1b25;
+            border-radius: 10px;
+            padding: 12px;
         }
 
         #game-area {
             width: 100%;
-            height: 500px;
+            height: 450px;
             position: relative;
-            margin-top: 40px;
-            border-top: 1px solid #1b1b25;
+            margin-top: 20px;
+            border: 1px solid #1b1b25;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .target {
             width: 60px;
             height: 60px;
-            background: #6b5bff;
-            border-radius: 8px;
             position: absolute;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(107, 91, 255, 0.7);
-            transition: transform 0.1s ease;
         }
 
-        .target:active {
-            transform: scale(0.9);
+        .target img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 0 18px rgba(107, 91, 255, 0.7);
         }
 
         #score {
-            margin-top: 20px;
-            font-size: 1.4rem;
+            margin-top: 10px;
+            font-size: 1.2rem;
             color: #6b5bff;
         }
 
         #start-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
+            margin-top: 10px;
+            padding: 8px 16px;
             background: #6b5bff;
             border: none;
             border-radius: 6px;
             color: white;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             box-shadow: 0 0 15px rgba(107, 91, 255, 0.7);
         }
 
-        #start-btn:hover {
-            background: #7d6dff;
+        #nick-input {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #1b1b25;
+            background: #050509;
+            color: #f5f5f5;
+            margin-bottom: 8px;
+        }
+
+        #save-btn {
+            width: 100%;
+            padding: 7px 8px;
+            border-radius: 6px;
+            border: none;
+            background: #6b5bff;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        #ranking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        #ranking-list li {
+            padding: 4px 0;
+            border-bottom: 1px solid #1b1b25;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 800px) {
+            #layout { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-    <h1>OKNT – Minigierka</h1>
-    <p>Klikaj w pojawiający się kwadrat zanim zniknie.</p>
+<h1>OKNT – Minigierka</h1>
 
-    <div id="score">Wynik: 0</div>
-    <button id="start-btn">Start</button>
+<div id="layout">
+    <div id="left">
+        <div id="score">Wynik: 0</div>
+        <button id="start-btn">Start</button>
+        <div id="game-area"></div>
+    </div>
 
-    <div id="game-area"></div>
+    <div id="right">
+        <h2>GLOBALNY RANKING</h2>
+        <input id="nick-input" type="text" placeholder="Twój nick">
+        <button id="save-btn">Zapisz wynik</button>
+        <ul id="ranking-list"></ul>
+    </div>
+</div>
 
-    <script>
-        const gameArea = document.getElementById("game-area");
-        const scoreDisplay = document.getElementById("score");
-        const startBtn = document.getElementById("start-btn");
+<!-- FIREBASE -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        let score = 0;
-        let active = false;
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvAzrF0WminVzk3MCw3p8HbGFH8A2a_jI",
+        authDomain: "oknt-ranking.firebaseapp.com",
+        projectId: "oknt-ranking",
+        storageBucket: "oknt-ranking.firebasestorage.app",
+        messagingSenderId: "346369794153",
+        appId: "1:346369794153:web:0cb458d3672d9d00b9c2f8",
+        measurementId: "G-SW20DQGJK0"
+    };
 
-        function spawnTarget() {
-            if (!active) return;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-            const target = document.createElement("div");
-            target.classList.add("target");
+    const gameArea = document.getElementById("game-area");
+    const scoreDisplay = document.getElementById("score");
+    const startBtn = document.getElementById("start-btn");
+    const nickInput = document.getElementById("nick-input");
+    const saveBtn = document.getElementById("save-btn");
+    const rankingList = document.getElementById("ranking-list");
 
-            const maxX = gameArea.clientWidth - 60;
-            const maxY = gameArea.clientHeight - 60;
+    let score = 0;
+    let active = false;
 
-            target.style.left = Math.random() * maxX + "px";
-            target.style.top = Math.random() * maxY + "px";
+    function spawnTarget() {
+        if (!active) return;
 
-            target.onclick = () => {
-                score++;
-                scoreDisplay.textContent = "Wynik: " + score;
-                target.remove();
-            };
+        const target = document.createElement("div");
+        target.classList.add("target");
 
-            gameArea.appendChild(target);
+        const img = document.createElement("img");
+        img.src = "target.png";
+        target.appendChild(img);
 
-            setTimeout(() => {
-                if (target.parentNode) target.remove();
-            }, 900);
+        const maxX = gameArea.clientWidth - 60;
+        const maxY = gameArea.clientHeight - 60;
 
-            setTimeout(spawnTarget, 1000);
-        }
+        target.style.left = Math.random() * maxX + "px";
+        target.style.top = Math.random() * maxY + "px";
 
-        startBtn.onclick = () => {
-            score = 0;
-            scoreDisplay.textContent = "Wynik: 0";
-            active = true;
-            spawnTarget();
+        target.onclick = () => {
+            score++;
+            scoreDisplay.textContent = "Wynik: " + score;
+            target.remove();
         };
-    </script>
+
+        gameArea.appendChild(target);
+
+        setTimeout(() => {
+            if (target.parentNode) target.remove();
+        }, 900);
+
+        setTimeout(spawnTarget, 1000);
+    }
+
+    startBtn.onclick = () => {
+        score = 0;
+        scoreDisplay.textContent = "Wynik: 0";
+        active = true;
+        spawnTarget();
+    };
+
+    saveBtn.onclick = async () => {
+        const nick = nickInput.value.trim();
+        if (!nick) return;
+
+        await addDoc(collection(db, "scores"), {
+            nick: nick,
+            score: score,
+            time: Date.now()
+        });
+
+        nickInput.value = "";
+    };
+
+    const q = query(collection(db, "scores"), orderBy("score", "desc"));
+    onSnapshot(q, (snapshot) => {
+        rankingList.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const li = document.createElement("li");
+            li.innerHTML = `<span>${doc.data().nick}</span><span>${doc.data().score}</span>`;
+            rankingList.appendChild(li);
+        });
+    });
+</script>
 
 </body>
 </html>
