@@ -8,56 +8,222 @@
 </head>
 <body>
 
-    <div class="bg-animation"></div>
+    <!-- Animowane tło -->
+    <div class="bg-layer bg-1"></div>
+    <div class="bg-layer bg-2"></div>
+    <div class="bg-grid"></div>
 
-    <nav>
-        <h1>Okn't</h1>
-        <a href="https://discord.gg/TWOJ-LINK" class="nav-btn">Dołącz</a>
+    <!-- Nawigacja -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <span class="logo-dot"></span>
+            <span class="logo-text">Okn't</span>
+        </div>
+        <div class="nav-right">
+            <a href="#about" class="nav-link">O serwerze</a>
+            <a href="#features" class="nav-link">Funkcje</a>
+            <a href="#stats" class="nav-link">Statystyki</a>
+            <a href="#team" class="nav-link">Ekipa</a>
+            <a href="https://discord.gg/TWOJ-LINK" class="nav-join">Dołącz</a>
+        </div>
     </nav>
 
+    <!-- HERO -->
     <header class="hero">
-        <div class="hero-content">
-            <h2 class="glow">Witamy na Okn't</h2>
-            <p>Oficjalna wizytówka serwera CN — społeczność, klimat i aktywność.</p>
-            <a href="https://discord.gg/TWOJ-LINK" class="join-btn">Dołącz do serwera</a>
+        <div class="hero-inner">
+            <div class="hero-text">
+                <h1 class="hero-title">Okn't CN Hub</h1>
+                <p class="hero-subtitle">
+                    Kolorowy, aktywny i konkretny serwer CN.  
+                    Rozmowy, gry, memy, projekty i klimat, którego nie znajdziesz nigdzie indziej.
+                </p>
+                <div class="hero-actions">
+                    <a href="https://discord.gg/TWOJ-LINK" class="btn primary">Dołącz do serwera</a>
+                    <a href="#features" class="btn ghost">Zobacz co oferujemy</a>
+                </div>
+            </div>
+            <div class="hero-panel">
+                <div class="panel-header">Panel serwera</div>
+                <div class="panel-body">
+                    <div class="panel-row">
+                        <span>Status</span>
+                        <span class="status-pill online">Online</span>
+                    </div>
+                    <div class="panel-row">
+                        <span>Tryb</span>
+                        <span>CN / Community</span>
+                    </div>
+                    <div class="panel-row">
+                        <span>Aktywność</span>
+                        <span>Wysoka</span>
+                    </div>
+                    <div class="panel-row">
+                        <span>Strefa</span>
+                        <span>PL / EU</span>
+                    </div>
+                    <div class="panel-divider"></div>
+                    <div class="panel-row">
+                        <span>Kanały</span>
+                        <span>+20</span>
+                    </div>
+                    <div class="panel-row">
+                        <span>Role</span>
+                        <span>Custom / Kolorowe</span>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="https://discord.gg/TWOJ-LINK" class="panel-btn">Wejdź na Discord</a>
+                </div>
+            </div>
         </div>
     </header>
 
-    <section class="section about fade-in">
-        <h3>O nas</h3>
-        <p>
-            Okn't to miejsce, gdzie społeczność CN spotyka się, aby rozmawiać, grać, tworzyć
-            i spędzać czas w przyjaznej atmosferze.  
-            Nasz serwer to połączenie luzu, humoru i aktywności.
-        </p>
-    </section>
-
-    <section class="section features fade-in">
-        <h3>Co oferujemy?</h3>
-        <div class="grid">
-            <div class="card">
-                <h4>Aktywna społeczność</h4>
-                <p>Codzienne rozmowy, memy, dyskusje i zabawa.</p>
+    <!-- O NAS -->
+    <section id="about" class="section fade-in">
+        <div class="section-header">
+            <h2>O serwerze Okn't</h2>
+            <p>Krótko, konkretnie, bez zbędnego chaosu.</p>
+        </div>
+        <div class="section-content two-col">
+            <div>
+                <p>
+                    Okn't to serwer CN, który stawia na przejrzystość, klimat i aktywność.
+                    Bez przesadnego bałaganu, za to z dobrze poukładanymi kanałami, rolami
+                    i jasnymi zasadami.
+                </p>
+                <p>
+                    Nieważne, czy wchodzisz tylko pogadać, pograć, czy posiedzieć w tle —
+                    znajdziesz tu swoje miejsce.  
+                    Stawiamy na luźną atmosferę, ale z szacunkiem i ogarnięciem.
+                </p>
             </div>
-            <div class="card">
-                <h4>Eventy</h4>
-                <p>Konkursy, turnieje, zabawy i akcje specjalne.</p>
-            </div>
-            <div class="card">
-                <h4>Kanały tematyczne</h4>
-                <p>Gry, muzyka, technologia, lifestyle i wiele więcej.</p>
-            </div>
-            <div class="card">
-                <h4>Administracja</h4>
-                <p>Przyjazna, aktywna i pomocna ekipa.</p>
+            <div class="info-box">
+                <h3>Dlaczego warto?</h3>
+                <ul>
+                    <li>Kolorowe, czytelne role i kanały</li>
+                    <li>Aktywne rozmowy tekstowe i głosowe</li>
+                    <li>Eventy, mini-turnieje, wspólne gry</li>
+                    <li>Przejrzysty panel i jasna struktura</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <footer>
-        <p>© 2026 Okn't — Wszystkie prawa zastrzeżone</p>
+    <!-- FUNKCJE -->
+    <section id="features" class="section fade-in">
+        <div class="section-header">
+            <h2>Funkcje serwera</h2>
+            <p>Kolorowy styl, ale wszystko logicznie poukładane.</p>
+        </div>
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-tag blue">Społeczność</div>
+                <h3>Aktywne centrum CN</h3>
+                <p>
+                    Miejsce dla ludzi, którzy lubią rozmawiać, śmiać się, grać i tworzyć.
+                    Zero sztucznego nadęcia, czysty vibe.
+                </p>
+            </div>
+            <div class="card">
+                <div class="card-tag purple">Kanały</div>
+                <h3>Czytelny układ</h3>
+                <p>
+                    Kanały podzielone logicznie: rozmowy, gry, media, projekty, off-topic.
+                    Łatwo się odnaleźć od pierwszej minuty.
+                </p>
+            </div>
+            <div class="card">
+                <div class="card-tag green">Eventy</div>
+                <h3>Akcje i zabawy</h3>
+                <p>
+                    Nieregularne, ale konkretne eventy: gry, konkursy, wspólne sesje.
+                    Bez spamu, za to z sensem.
+                </p>
+            </div>
+            <div class="card">
+                <div class="card-tag orange">Role</div>
+                <h3>Kolorowe role</h3>
+                <p>
+                    System ról, który wygląda dobrze i ma sens.  
+                    Kolory, poziomy, wyróżnienia dla aktywnych.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATYSTYKI -->
+    <section id="stats" class="section fade-in">
+        <div class="section-header">
+            <h2>Statystyki serwera</h2>
+            <p>Prosty, przejrzysty panel z najważniejszymi liczbami.</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Użytkownicy</span>
+                <span class="stat-value">+150</span>
+                <span class="stat-desc">aktywnych członków</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Kanały</span>
+                <span class="stat-value">24</span>
+                <span class="stat-desc">logicznie pogrupowane</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Eventy</span>
+                <span class="stat-value">+10</span>
+                <span class="stat-desc">zorganizowanych akcji</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Online</span>
+                <span class="stat-value">Zawsze</span>
+                <span class="stat-desc">serwer 24/7</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- EKIPA -->
+    <section id="team" class="section fade-in">
+        <div class="section-header">
+            <h2>Ekipa Okn't</h2>
+            <p>Osoby, które pilnują porządku i klimatu.</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="avatar-circle avatar-1"></div>
+                <h3>Owner</h3>
+                <p>Ogarnięty, ale nie sztywny. Dba o kierunek serwera.</p>
+            </div>
+            <div class="team-card">
+                <div class="avatar-circle avatar-2"></div>
+                <h3>Admini</h3>
+                <p>Pomocni, aktywni, reagują szybko, ale bez przesady z regulaminem.</p>
+            </div>
+            <div class="team-card">
+                <div class="avatar-circle avatar-3"></div>
+                <h3>Moderatorzy</h3>
+                <p>Pilnują porządku, ale też biorą udział w rozmowach i akcjach.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA KOŃCOWE -->
+    <section class="section section-cta fade-in">
+        <div class="cta-box">
+            <h2>Gotowy dołączyć?</h2>
+            <p>
+                Jeśli szukasz serwera CN z klimatem, kolorem i przejrzystą strukturą,
+                to Okn't jest dobrym miejscem na start.
+            </p>
+            <a href="https://discord.gg/TWOJ-LINK" class="btn primary big">Wejdź na Discord</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>© 2026 Okn't — Strona wizytówka serwera CN</p>
     </footer>
 
     <script src="script.js"></script>
 </body>
 </html>
+
