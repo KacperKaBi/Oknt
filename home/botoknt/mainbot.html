@@ -8,8 +8,7 @@
 <style>
 /* ============================================================
    GLOBAL STYLE — OKN'T DARK GLASS THEME
-   ============================================================ */
-
+=========================================================== */
 :root {
     --bg1: #000000;
     --bg2: #0d0d0d;
@@ -35,7 +34,9 @@ body {
     color: white;
 }
 
-/* BACKGROUND GLOW */
+/* ============================================================
+   BACKGROUND EFFECTS
+=========================================================== */
 .bg-glow {
     position: fixed;
     width: 1600px;
@@ -53,7 +54,6 @@ body {
     100% { transform: translate(260px, 260px); opacity: 0.5; }
 }
 
-/* STARS */
 .stars {
     position: fixed;
     inset: 0;
@@ -78,9 +78,8 @@ body {
 }
 
 /* ============================================================
-   HEADER — IDENTYCZNY JAK NA STRONIE GŁÓWNEJ
-   ============================================================ */
-
+   HEADER
+=========================================================== */
 header {
     width: 100%;
     padding: 14px 30px;
@@ -91,8 +90,6 @@ header {
     backdrop-filter: blur(14px);
     background: rgba(0,0,0,0.25);
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 0 40px rgba(255,255,255,0.05);
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,8 +98,6 @@ header {
 .header-left {
     position: absolute;
     left: 30px;
-    top: 50%;
-    transform: translateY(-50%);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -112,14 +107,10 @@ header {
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 0 12px rgba(255,255,255,0.25);
 }
 
 .header-left .title {
     font-size: 22px;
-    letter-spacing: 0.05em;
-    opacity: 0.9;
 }
 
 .nav {
@@ -132,21 +123,19 @@ header {
     text-decoration: none;
     font-size: 19px;
     opacity: 0.75;
-    transition: 0.25s;
     padding: 6px 10px;
     border-radius: 8px;
+    transition: 0.25s;
 }
 
 .nav a:hover {
     opacity: 1;
     background: rgba(255,255,255,0.12);
-    transform: translateY(-2px);
 }
 
 /* ============================================================
    HERO SECTION
-   ============================================================ */
-
+=========================================================== */
 .hero {
     margin-top: 160px;
     text-align: center;
@@ -171,7 +160,6 @@ header {
 .hero h1 {
     font-size: 56px;
     margin-top: 20px;
-    letter-spacing: 0.05em;
 }
 
 .hero p {
@@ -194,7 +182,6 @@ header {
     padding: 14px 28px;
     background: rgba(255,255,255,0.08);
     border-radius: 14px;
-    backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.15);
     color: white;
     font-size: 18px;
@@ -209,8 +196,7 @@ header {
 
 /* ============================================================
    FEATURES SECTION
-   ============================================================ */
-
+=========================================================== */
 .features {
     max-width: 1200px;
     margin: 140px auto;
@@ -233,13 +219,11 @@ header {
     padding: 30px;
     border-radius: 20px;
     backdrop-filter: blur(14px);
-    box-shadow: 0 0 40px rgba(255,255,255,0.08);
     transition: 0.3s;
 }
 
 .feature-box:hover {
     transform: translateY(-10px);
-    box-shadow: 0 0 60px rgba(255,255,255,0.18);
 }
 
 .feature-box h3 {
@@ -254,8 +238,7 @@ header {
 
 /* ============================================================
    SHOWCASE SECTION
-   ============================================================ */
-
+=========================================================== */
 .showcase {
     max-width: 1200px;
     margin: 160px auto;
@@ -271,9 +254,7 @@ header {
     background: rgba(255,255,255,0.06);
     padding: 30px;
     border-radius: 20px;
-    backdrop-filter: blur(14px);
     margin-bottom: 40px;
-    box-shadow: 0 0 40px rgba(255,255,255,0.08);
 }
 
 .showcase-item img {
@@ -296,15 +277,79 @@ header {
 
 /* ============================================================
    FOOTER
-   ============================================================ */
-
+=========================================================== */
 footer {
     margin-top: 120px;
     padding: 40px;
     text-align: center;
     background: rgba(255,255,255,0.04);
     border-top: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
+}
+
+/* ============================================================
+   MOBILE VERSION
+=========================================================== */
+@media (max-width: 768px) {
+
+    .nav { display: none; }
+
+    .hero img {
+        width: 130px;
+        height: 130px;
+    }
+
+    .hero h1 {
+        font-size: 38px;
+    }
+
+    .hero p {
+        font-size: 16px;
+        padding: 0 20px;
+    }
+
+    .btn-row {
+        flex-direction: column;
+        gap: 14px;
+        padding: 0 20px;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .features {
+        padding: 0 20px;
+        margin: 100px auto;
+    }
+
+    .features h2 {
+        font-size: 32px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .showcase {
+        padding: 0 20px;
+        margin: 100px auto;
+    }
+
+    .showcase h2 {
+        font-size: 32px;
+    }
+
+    .showcase-item img {
+        height: 200px;
+    }
+
+    footer {
+        padding: 20px;
+        font-size: 14px;
+    }
 }
 </style>
 </head>
@@ -313,7 +358,6 @@ footer {
 <div class="bg-glow"></div>
 <div class="stars"></div>
 
-<!-- HEADER -->
 <header>
     <div class="header-left">
         <img src="logo.png">
@@ -331,14 +375,12 @@ footer {
     </nav>
 </header>
 
-<!-- HERO -->
 <section class="hero">
     <img src="bot.png">
     <h1>Okn't Bot</h1>
     <p>
-        Oficjalny bot Okn't — stworzony, aby ułatwić korzystanie z wielu funkcji serwerów na Discordzie.
-        Minimalistyczny, szybki, stabilny i zaprojektowany tak, aby idealnie pasował do
-        każdego serwera, który ceni sobie jakość i styl.
+        Oficjalny bot Okn't — szybki, stabilny i zaprojektowany tak,
+        aby idealnie pasował do każdego serwera Discord.
     </p>
 
     <div class="btn-row">
@@ -348,94 +390,39 @@ footer {
     </div>
 </section>
 
-<!-- FEATURES -->
 <section class="features">
     <h2>Co potrafi Okn't Bot?</h2>
 
     <div class="features-grid">
-
-        <div class="feature-box">
-            <h3>Moderacja</h3>
-            <p>
-                Filtry wiadomości, logi zdarzeń,
-                 timeouty, bany, ostrzeżenia i pełna kontrola nad zachowaniem użytkowników.
-            </p>
-        </div>
-
-        <div class="feature-box">
-            <h3>Muzyka</h3>
-            <p>
-                Odtwarzanie muzyki w wysokiej jakości, kolejki, playlisty, sterowanie
-                reakcjami i obsługa linków z Youtuba
-            </p>
-        </div>
-
-        <div class="feature-box">
-            <h3>System Ekonomii</h3>
-            <p>
-                Waluta serwera, sklep, nagrody, codzienne bonusy, ranking aktywności
-                i pełna konfiguracja ekonomii.
-            </p>
-        </div>
-
-        <div class="feature-box">
-            <h3>Profile Użytkowników</h3>
-            <p>
-                Karty profili, poziomy, XP, osiągnięcia, statystyki i personalizacja
-                wyglądu profilu.
-            </p>
-        </div>
-
-        <div class="feature-box">
-            <h3>Automatyzacja</h3>
-            <p>
-                Powitania, pożegnania, automatyczne role, reakcje, przypomnienia,
-                harmonogramy i konkursy.
-            </p>
-        </div>
-
-        <div class="feature-box">
-            <h3>AI</h3>
-            <p>
-                Własny model AI z możliwością dostosowania charakteru oraz konfiguracją kanałów.
-                Inteligentne odpowiedzi, bez błędów i cenzury.
-            </p>
-        </div>
-
+        <div class="feature-box"><h3>Moderacja</h3><p>Filtry, logi, bany, timeouty, ostrzeżenia.</p></div>
+        <div class="feature-box"><h3>Muzyka</h3><p>Wysoka jakość, kolejki, playlisty.</p></div>
+        <div class="feature-box"><h3>Ekonomia</h3><p>Waluta, sklep, nagrody, ranking.</p></div>
+        <div class="feature-box"><h3>Profile</h3><p>Poziomy, XP, osiągnięcia.</p></div>
+        <div class="feature-box"><h3>Automatyzacja</h3><p>Role, powitania, przypomnienia.</p></div>
+        <div class="feature-box"><h3>AI</h3><p>Inteligentne odpowiedzi, personalizacja.</p></div>
     </div>
 </section>
 
-<!-- SHOWCASE -->
 <section class="showcase">
     <h2>Jak wygląda Okn't Bot?</h2>
 
     <div class="showcase-item">
         <img src="img/showcase1.png">
         <h3>Dashboard</h3>
-        <p>
-            Tu bedzie opis dashboardu.
-        </p>
+        <p>Tu będzie opis dashboardu.</p>
     </div>
 
     <div class="showcase-item">
         <img src="img/showcase2.png">
         <h3>System profili</h3>
-        <p>
-            Eleganckie, minimalistyczne profile użytkowników z poziomami, XP,
-            osiągnięciami i personalizacją. Każdy użytkownik może stworzyć swój
-            własny styl.
-        </p>
+        <p>Minimalistyczne profile z XP, poziomami i osiągnięciami.</p>
     </div>
 
     <div class="showcase-item">
         <img src="img/showcase3.png">
-        <h3>Moderacja w czasie rzeczywistym</h3>
-        <p>
-            Automatyczne akcje i pełna kontrola nad tym, co dzieje się
-            na serwerze. Bot reaguje natychmiast i będzie działać 24/7.
-        </p>
+        <h3>Moderacja</h3>
+        <p>Automatyczne akcje i pełna kontrola nad serwerem.</p>
     </div>
-
 </section>
 
 <footer>
@@ -443,7 +430,6 @@ footer {
 </footer>
 
 <script>
-/* STAR GENERATOR */
 const starsContainer = document.querySelector(".stars");
 for (let i = 0; i < 140; i++) {
     const s = document.createElement("span");
