@@ -8,8 +8,7 @@
 <style>
 /* ============================================================
    GLOBAL STYLE
-   ============================================================ */
-
+=========================================================== */
 :root {
     --bg1: #000000;
     --bg2: #0d0d0d;
@@ -32,8 +31,7 @@ body {
 
 /* ============================================================
    HEADER
-   ============================================================ */
-
+=========================================================== */
 header {
     width: 100%;
     padding: 14px 30px;
@@ -89,8 +87,7 @@ header {
 
 /* ============================================================
    PAGE LAYOUT
-   ============================================================ */
-
+=========================================================== */
 .page {
     margin-top: 140px;
     display: flex;
@@ -104,8 +101,7 @@ header {
 
 /* ============================================================
    SIDEBAR
-   ============================================================ */
-
+=========================================================== */
 .sidebar {
     width: 260px;
     background: var(--glass);
@@ -142,8 +138,7 @@ header {
 
 /* ============================================================
    COMMAND LIST
-   ============================================================ */
-
+=========================================================== */
 .commands {
     flex: 1;
     height: 100%;
@@ -171,8 +166,7 @@ header {
 
 /* ============================================================
    ULTRA-KOMPAKTOWE KAFELKI
-   ============================================================ */
-
+=========================================================== */
 .command-box {
     padding: 6px 2px;
     border-bottom: 1px solid var(--line);
@@ -192,8 +186,7 @@ header {
 
 /* ============================================================
    FOOTER
-   ============================================================ */
-
+=========================================================== */
 footer {
     position: fixed;
     bottom: 0;
@@ -202,6 +195,100 @@ footer {
     text-align: center;
     background: rgba(255,255,255,0.04);
     border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ============================================================
+   RESPONSYWNOŚĆ — TELEFONY
+=========================================================== */
+@media (max-width: 768px) {
+
+    body {
+        overflow: hidden;
+    }
+
+    header {
+        padding: 10px 16px;
+    }
+
+    .header-left {
+        left: 16px;
+        gap: 8px;
+    }
+
+    .header-left img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .header-left .title {
+        font-size: 18px;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .page {
+        flex-direction: column;
+        height: calc(100vh - 160px);
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 12px;
+    }
+
+    .sidebar h2 {
+        width: 100%;
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+
+    .category {
+        flex: 1 1 calc(50% - 10px);
+        text-align: center;
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .commands {
+        height: calc(100vh - 300px);
+        overflow-y: auto;
+        padding-right: 6px;
+    }
+
+    .commands-description {
+        font-size: 14px;
+        padding: 0 4px;
+    }
+
+    .search-box {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .command-box {
+        padding: 6px 0;
+    }
+
+    .command-name {
+        font-size: 13px;
+    }
+
+    .command-desc {
+        font-size: 11px;
+    }
+
+    footer {
+        padding: 10px;
+        font-size: 12px;
+    }
 }
 </style>
 </head>
@@ -228,7 +315,6 @@ footer {
 
 <div class="page">
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
         <h2>Kategorie</h2>
 
@@ -240,7 +326,6 @@ footer {
         <div class="category" data-cat="utility">Narzędzia</div>
     </div>
 
-    <!-- COMMAND LIST -->
     <div class="commands">
 
         <div class="commands-description">
@@ -284,11 +369,10 @@ categories.forEach(cat => {
         const selected = cat.dataset.cat;
 
         Array.from(commands).forEach(cmd => {
-            if (selected === "all" || cmd.dataset.cat === selected) {
-                cmd.style.display = "block";
-            } else {
-                cmd.style.display = "none";
-            }
+            cmd.style.display =
+                selected === "all" || cmd.dataset.cat === selected
+                ? "block"
+                : "none";
         });
     });
 });
@@ -301,7 +385,10 @@ document.querySelector(".search-box").addEventListener("input", e => {
         const name = cmd.querySelector(".command-name").textContent.toLowerCase();
         const desc = cmd.querySelector(".command-desc").textContent.toLowerCase();
 
-        cmd.style.display = (name.includes(value) || desc.includes(value)) ? "block" : "none";
+        cmd.style.display =
+            name.includes(value) || desc.includes(value)
+            ? "block"
+            : "none";
     });
 });
 </script>
