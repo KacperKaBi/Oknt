@@ -2,6 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Okn't</title>
 
 <style>
@@ -14,15 +15,14 @@
     --bg3: #050505;
 }
 
-/* -----------------------------------------------------------
-   GLOBAL RESET
------------------------------------------------------------ */
+/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* BODY */
 body {
     background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
     height: 100vh;
@@ -121,6 +121,27 @@ body {
     z-index: 2;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
     mix-blend-mode: soft-light;
+}
+
+/* -----------------------------------------------------------
+   RESPONSYWNOŚĆ — TELEFONY
+----------------------------------------------------------- */
+@media (max-width: 768px) {
+
+    body {
+        overflow: hidden;
+    }
+
+    .logo {
+        width: 150px;
+        height: 150px;
+    }
+
+    .bg-glow {
+        width: 800px;
+        height: 800px;
+        filter: blur(120px);
+    }
 }
 </style>
 </head>
