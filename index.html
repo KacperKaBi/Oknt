@@ -5,18 +5,12 @@
 <title>Okn't</title>
 
 <style>
-/* -----------------------------------------------------------
-   ROOT THEME — OKN'T DARK AESTHETIC
------------------------------------------------------------ */
 :root {
     --bg1: #000000;
     --bg2: #111111;
     --bg3: #050505;
 }
 
-/* -----------------------------------------------------------
-   GLOBAL RESET
------------------------------------------------------------ */
 * {
     margin: 0;
     padding: 0;
@@ -32,9 +26,18 @@ body {
     align-items: center;
 }
 
-/* -----------------------------------------------------------
-   BACKGROUND GLOW
------------------------------------------------------------ */
+/* RESPONSYWNOŚĆ – TELEFONY */
+@media (max-width: 768px) {
+    body {
+        overflow: hidden;
+    }
+    .logo {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* BACKGROUND GLOW */
 .bg-glow {
     position: fixed;
     width: 1100px;
@@ -52,9 +55,7 @@ body {
     100% { transform: translate(200px, 200px); }
 }
 
-/* -----------------------------------------------------------
-   STARS
------------------------------------------------------------ */
+/* STARS */
 .stars {
     position: fixed;
     inset: 0;
@@ -78,9 +79,7 @@ body {
     100% { opacity: 0.1; transform: translateY(0); }
 }
 
-/* -----------------------------------------------------------
-   LOGO (CLICKABLE)
------------------------------------------------------------ */
+/* LOGO */
 .logo {
     position: relative;
     width: 200px;
@@ -110,9 +109,7 @@ body {
     100% { transform: translateY(0); }
 }
 
-/* -----------------------------------------------------------
-   NOISE OVERLAY
------------------------------------------------------------ */
+/* NOISE */
 .noise {
     position: fixed;
     inset: 0;
@@ -133,14 +130,13 @@ body {
 <div class="stars"></div>
 <div class="noise"></div>
 
+<!-- POPRAWIONY LINK (DZIAŁA LOKALNIE I NA GITHUBIE) -->
 <a href="home/home.html" class="logo">
     <img src="logo.png">
 </a>
 
 <script>
-/* -----------------------------------------------------------
-   GENERATE STARS
------------------------------------------------------------ */
+/* STARS */
 const starsContainer = document.querySelector(".stars");
 for (let i = 0; i < 90; i++) {
     const s = document.createElement("span");
@@ -151,9 +147,7 @@ for (let i = 0; i < 90; i++) {
     starsContainer.appendChild(s);
 }
 
-/* -----------------------------------------------------------
-   MUSIC AUTOPLAY FIX
------------------------------------------------------------ */
+/* MUSIC FIX */
 setTimeout(() => {
     const bgm = document.getElementById("bgm");
     bgm.muted = false;
