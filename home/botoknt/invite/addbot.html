@@ -11,7 +11,6 @@
     --bg2: #0d0d0d;
     --bg3: #1a1a1a;
     --glass: rgba(255,255,255,0.05);
-    --glass-strong: rgba(255,255,255,0.12);
     --btn: #1b1b1b;
     --btn-hover: #2a2a2a;
 }
@@ -93,6 +92,7 @@ body {
     position: relative;
     z-index: 5;
     max-width: 520px;
+    width: 90%;
     padding: 45px;
     background: var(--glass);
     border-radius: 22px;
@@ -113,7 +113,7 @@ body {
     100% { transform: translateY(0); }
 }
 
-/* LOGO W RAMCE */
+/* LOGO */
 .logo-img {
     width: 120px;
     height: 120px;
@@ -142,7 +142,7 @@ p {
     margin-bottom: 35px;
 }
 
-/* PRZYCISK — CIEMNY */
+/* PRZYCISK */
 .btn {
     display: inline-block;
     padding: 16px 34px;
@@ -160,6 +160,42 @@ p {
     transform: scale(1.06);
     box-shadow: 0 0 40px rgba(0,0,0,0.7);
 }
+
+/* ============================================================
+   RESPONSYWNOŚĆ — TELEFONY
+=========================================================== */
+@media (max-width: 768px) {
+
+    body {
+        overflow: hidden;
+        padding: 20px;
+    }
+
+    .container {
+        padding: 30px;
+        width: 100%;
+    }
+
+    .logo-img {
+        width: 100px;
+        height: 100px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    p {
+        font-size: 16px;
+        margin-bottom: 25px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+    }
+}
 </style>
 </head>
 <body>
@@ -170,7 +206,6 @@ p {
 
 <div class="container">
 
-    <!-- LOGO NA GÓRZE -->
     <img src="logo.png" class="logo-img">
 
     <h1>Okn't</h1>
