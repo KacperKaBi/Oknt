@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Nazwa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --green-dark: #0c1a12;
+  --green-mid: #1e3a28;
+  --green-light: #3d6b4a;
+  --green-accent: #4b8b5a;
+  --gray: #7a7a7a;
+  --gray-soft: #bdbdbd;
+  --white: #ffffff;
+  --border-soft: rgba(255,255,255,0.08);
+  --border-subtle: rgba(255,255,255,0.06);
+  --bg-panel: rgba(0,0,0,0.25);
+  --bg-block: rgba(0,0,0,0.18);
+  --bg-section: rgba(0,0,0,0.15);
+}
+
+/* RESET */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  height: 100%;
+  background: radial-gradient(circle at 50% 20%, var(--green-mid), var(--green-dark) 70%);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--white);
+}
+
+/* CANVAS */
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* PAGE WRAP */
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  position: sticky;
+  top: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-soft);
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-left img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* NAV */
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 10px;
+}
+
+.nav-link {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: rgba(0,0,0,0.25);
+  text-decoration: none;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.nav-link:hover {
+  border-color: rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.4);
+}
+
+/* SURFACE */
+.surface {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px 32px 60px;
+  border-radius: 20px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.hero-title {
+  font-size: 46px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.hero-title span {
+  color: var(--green-light);
+}
+
+/* SECTION BASE */
+.section {
+  padding: 32px;
+  border-radius: 16px;
+  background: var(--bg-section);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* O NAS */
+.onas-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 28px;
+}
+
+.onas-text p {
+  font-size: 15px;
+  color: var(--gray-soft);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+/* FAKTY */
+.fact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.fact {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--bg-block);
+  border: 1px solid var(--border-subtle);
+}
+
+.fact-label {
+  font-size: 11px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.fact-value {
+  font-size: 14px;
+  color: var(--white);
+}
+
+/* NEWS SLIDER */
+.news-wrapper {
+  position: relative;
+  padding: 10px 40px;
+}
+
+.news-slider {
+  display: flex;
+  gap: 18px;
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+
+.news-card {
+  flex: 0 0 calc((100% - 36px) / 3);
+  background: var(--bg-block);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 16:9 IMG */
+.news-media {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  overflow: hidden;
+}
+
+.news-media img.news-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* BODY */
+.news-body {
+  padding: 14px 16px 16px;
+}
+
+.news-title {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.news-date {
+  font-size: 12px;
+  color: var(--gray-soft);
+  margin-bottom: 6px;
+}
+
+.news-text {
+  font-size: 14px;
+  color: var(--gray-soft);
+  line-height: 1.6;
+}
+
+/* ARROWS */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.arrow:hover {
+  background: rgba(0,0,0,0.55);
+  border-color: rgba(255,255,255,0.18);
+}
+
+.arrow-left { left: 4px; }
+.arrow-right { right: 4px; }
+
+/* RYNKI + MAPA */
+.market-map {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+}
+
+.market-table {
+  background: var(--bg-block);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.market-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.market-table th,
+.market-table td {
+  padding: 8px 4px;
+  font-size: 14px;
+}
+
+.market-table th {
+  color: var(--gray-soft);
+  text-transform: uppercase;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.market-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+
+.map-card {
+  background: var(--bg-block);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.map-frame iframe {
+  width: 100%;
+  height: 260px;
+  border: none;
+  border-radius: 12px;
+}
+
+/* KONTAKT */
+.contact-card {
+  background: var(--bg-block);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.contact-row {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: var(--gray-soft);
+}
+
+/* MEDIA */
+@media (max-width: 900px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .market-map {
+    grid-template-columns: 1fr;
+  }
+  .onas-layout {
+    grid-template-columns: 1fr;
+  }
+  .news-wrapper {
+    padding: 10px 30px;
+  }
+  .news-card {
+    flex: 0 0 calc(100% - 10px);
+  }
+  .hero-title {
+    font-size: 34px;
+  }
+}
+
+/* TELEFONY */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .header-left {
+    flex-direction: column;
+  }
+
+  .nav-list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .onas-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .fact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .news-wrapper {
+    padding: 0 20px;
+  }
+
+  .news-card {
+    flex: 0 0 100%;
+  }
+
+  .arrow-left { left: -4px; }
+  .arrow-right { right: -4px; }
+
+  .market-map {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .map-frame iframe {
+    height: 220px;
+  }
+
+  .contact-card {
+    padding: 14px;
+  }
+}
+
+
+.news-card {
+  min-height: 420px;
+}
+
+.news-body {
+  flex-grow: 1;
+}
+
+.news-text {
+  font-size: 15px;
+  line-height: 1.7;
+  white-space: normal;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="page">
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <img src="logo.png" alt="logo">
+      <div class="header-title">Nazwa</div>
+    </div>
+
+    <ul class="nav-list">
+      <li><a class="nav-link" href="#onas">O nas</a></li>
+      <li><a class="nav-link" href="#aktualnosci">Aktualności</a></li>
+      <li><a class="nav-link" href="galeria.html">Galeria Zdjęć</a></li>
+      <li><a class="nav-link" href="#mapa">Mapa</a></li>
+    </ul>
+  </div>
+</header>
+
+<main class="surface">
+
+<section class="hero">
+  <h1 class="hero-title"> Nazwa <span>Nazwa</span></h1>
+</section>
+
+<section id="onas" class="section">
+  <div class="section-title">O nas</div>
+
+  <div class="onas-layout">
+    <div class="onas-text">
+      <p>Opis (tu mozna cos napisac albo potem usune)</p>
+      <p>Opis 2 (drugi opis)</p>
+
+      <div class="fact-grid">
+        <div class="fact">
+          <div class="fact-label">Info 1</div>
+          <div class="fact-value">aaaaa</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">Info 2</div>
+          <div class="fact-value">bbbbbb</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">Info 3</div>
+          <div class="fact-value">cccccc</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">Info 4</div>
+          <div class="fact-value">ddddddd</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="fact">
+        <div class="fact-label">Adres </div>
+        <div class="fact-value">Różynka 16, gmina Świątki</div>
+      </div>
+      <div class="fact">
+        <div class="fact-label">Info 5</div>
+        <div class="fact-value">eeeeee</div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="aktualnosci" class="section">
+  <div class="section-title">Aktualności</div>
+
+  <div class="news-wrapper">
+    <div class="arrow arrow-left" onclick="scrollNews(-1)">‹</div>
+    <div class="arrow arrow-right" onclick="scrollNews(1)">›</div>
+
+    <div class="news-slider" id="newsSlider">
+
+      <div class="news-card">
+        <div class="news-media">
+          <img src="galeria/wydarzenie1.jpg" alt="Wydarzenie 1" class="news-img">
+        </div>
+        <div class="news-body">
+          <div class="news-title">Wydarzenie 1</div>
+          <div class="news-date">15.05.2026</div>
+          <div class="news-text">
+            AAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAA AAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAA 
+
+AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-media">
+          <img src="galeria/wydarzenie2.jpg" alt="Wydarzenie 2" class="news-img">
+        </div>
+        <div class="news-body">
+          <div class="news-title">Wydarzenie 2</div>
+          <div class="news-date">02.06.2026</div>
+          <div class="news-text">
+            OAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAA
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-media">
+          <img src="galeria/wydarzenie3.jpg" alt="Wydarzenie 3" class="news-img">
+        </div>
+        <div class="news-body">
+          <div class="news-title">Wydarzenie 3</div>
+          <div class="news-date">20.06.2026</div>
+          <div class="news-text">
+            OVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAA.
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-media">
+          <img src="galeria/wydarzenie4.jpg" alt="Wydarzenie 4" class="news-img">
+        </div>
+        <div class="news-body">
+          <div class="news-title">Wydarzenie 4</div>
+          <div class="news-date">01.07.2026</div>
+          <div class="news-text">
+           AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAA
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-media">
+          <img src="galeria/wydarzenie5.jpg" alt="Wydarzenie 5" class="news-img">
+        </div>
+        <div class="news-body">
+          <div class="news-title">Wydarzenie 5</div>
+          <div class="news-date">10.07.2026</div>
+          <div class="news-text">
+            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-media">
+          <img src="galeria/wydarzenie6.jpg" alt="Wydarzenie 6" class="news-img">
+        </div>
+        <div class="news-body">
+          <div class="news-title">Wydarzenie 6</div>
+          <div class="news-date">30.09.2026</div>
+          <div class="news-text">
+         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section id="mapa" class="section">
+  <div class="section-title">Rynki i mapa</div>
+
+  <div class="market-map">
+    <div class="market-table">
+      <div class="section-subtitle">Miejsce handlu</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Dzień</th>
+            <th>Godzina</th>
+            <th>Miejsce</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dzien</td>
+            <td>7:00–12:00</td>
+            <td>Olsztyn</td>
+          </tr>
+          <tr>
+            <td>DZien</td>
+            <td>8:00–13:00</td>
+            <td>miejsce</td>
+          </tr>
+          <tr>
+            <td>Dzien</td>
+            <td>7:00–12:00</td>
+            <td>miejsce</td>
+          </tr>
+          <tr>
+            <td>Dzzien</td>
+            <td>8:00–12:00</td>
+            <td>Miejsce</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="map-card">
+      <div class="section-subtitle">Mapa gospodarstwa</div>
+      <div class="map-frame">
+        <iframe src="https://maps.google.com/maps?q=Różynka%2016&z=13&layer=c&output=embed"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title">Kontakt</div>
+
+  <div class="contact-card">
+    <div class="contact-row"><b>Telefon:</b> +48 501 670 406</div>
+    <div class="contact-row"><b>Email:</b> kontakt@gospodarstwo.pl</div>
+    <div class="contact-row"><b>Adres:</b> Różynka 16 11-008 Świątki</div>
+  </div>
+</section>
+
+<footer class="footer">
+  © 2026 Nazwa
+</footer>
+
+</main>
+</div>
+
+<script>
+/* NEWS SLIDER */
+function scrollNews(dir) {
+  const slider = document.getElementById("newsSlider");
+  const card = slider.querySelector(".news-card");
+  if (!card) return;
+  const cardWidth = card.offsetWidth + 18;
+  slider.scrollLeft += dir * cardWidth;
+}
+
+/* PARTICLES */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particles = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function createParticles() {
+  particles = [];
+  const count = Math.floor((canvas.width + canvas.height) / 45);
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 1.4 + 0.4,
+      color: "rgba(61,107,74,0.35)"
+    });
+  }
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+
+resize();
+createParticles();
+drawParticles();
+window.addEventListener("resize", () => {
+  resize();
+  createParticles();
+});
+</script>
+
+</body>
+</html>
