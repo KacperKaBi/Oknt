@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Okn't — Pasek Utrzymania</title>
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #0b0b0b;
+    --bg3: #111111;
+
+    --white: #ffffff;
+    --white-soft: rgba(255,255,255,0.12);
+    --white-soft2: rgba(255,255,255,0.06);
+    --white-dim: rgba(255,255,255,0.55);
+
+    --frame: rgba(255,255,255,0.35);
+    --frame-glow: rgba(255,255,255,0.18);
+
+    --progress1: rgba(255,255,255,0.45);
+    --progress2: rgba(255,255,255,0.20);
+
+    --danger: #ff3b3b;
+}
+
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--white);
+}
+
+/* BACKGROUND GLOW */
+.bg-glow {
+    position: fixed;
+    width: 1100px;
+    height: 1100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
+    filter: blur(160px);
+    animation: glowMove 16s infinite alternate ease-in-out;
+    pointer-events: none;
+    z-index: 0;
+}
+@keyframes glowMove {
+    0% { transform: translate(-200px, -200px); }
+    50% { transform: translate(200px, -100px); }
+    100% { transform: translate(200px, 200px); }
+}
+
+/* STARS */
+.stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+.stars span {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255,255,255,0.7);
+    opacity: 0.15;
+    border-radius: 50%;
+    animation: blink 3s infinite ease-in-out;
+}
+@keyframes blink {
+    0% { opacity: 0.1; transform: translateY(0); }
+    50% { opacity: 0.9; transform: translateY(-6px); }
+    100% { opacity: 0.1; transform: translateY(0); }
+}
+
+/* NOISE */
+.noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    z-index: 2;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+}
+
+/* GAME CARD */
+.game {
+    position: relative;
+    z-index: 5;
+    width: 520px;
+    padding: 28px 30px 24px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* SCORE */
+#score {
+    font-size: 20px;
+    margin-bottom: 18px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* MAIN BAR */
+#barContainer {
+    width: 420px;
+    height: 46px;
+    background: var(--white-soft2);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 0 18px rgba(0,0,0,0.8);
+}
+
+/* FRAME */
+#zone {
+    position: absolute;
+    top: 3px;
+    height: calc(100% - 6px);
+    border: 2px solid var(--frame);
+    border-radius: 6px;
+    box-shadow: 0 0 10px var(--frame-glow), inset 0 0 6px var(--frame-glow);
+}
+
+/* INDICATOR — IMAGE */
+#indicator {
+    position: absolute;
+    width: 66px;
+    height: 66px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url("wskaznik.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* PROGRESS BAR */
+#progressContainer {
+    width: 420px;
+    height: 18px;
+    background: var(--white-soft2);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    margin-top: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 14px rgba(0,0,0,0.8);
+}
+#progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg,var(--progress1),var(--progress2));
+    transition: width 0.08s linear;
+}
+
+/* SHAKE */
+.game.shake {
+    animation: shakeAnim 0.35s ease;
+}
+@keyframes shakeAnim {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+    100% { transform: translateX(0); }
+}
+
+/* Danger score */
+.danger {
+    color: var(--danger);
+}
+.safe {
+    color: var(--white);
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="stars"></div>
+<div class="noise"></div>
+
+<div class="game">
+    <div id="score" class="safe">Punkty: 0</div>
+
+    <div id="barContainer">
+        <div id="zone"></div>
+        <div id="indicator"></div>
+    </div>
+
+    <div id="progressContainer">
+        <div id="progress"></div>
+    </div>
+</div>
+
+<script>
+/* STARS */
+const starsContainer = document.querySelector(".stars");
+for (let i = 0; i < 90; i++) {
+    const s = document.createElement("span");
+    s.style.top = Math.random()*100 + "%";
+    s.style.left = Math.random()*100 + "%";
+    s.style.animationDuration = (2 + Math.random()*2) + "s";
+    s.style.animationDelay = Math.random()*2 + "s";
+    starsContainer.appendChild(s);
+}
+
+/* GAME LOGIC */
+const scoreBox = document.getElementById("score");
+const indicatorEl = document.getElementById("indicator");
+const zoneEl = document.getElementById("zone");
+const progressEl = document.getElementById("progress");
+const gameCard = document.querySelector(".game");
+
+let score = 0;
+
+// sterowanie
+let holding = false;
+document.addEventListener("keydown", e => {
+    if (e.code === "Space") holding = true;
+});
+document.addEventListener("keyup", e => {
+    if (e.code === "Space") holding = false;
+});
+document.addEventListener("mousedown", () => holding = true);
+document.addEventListener("mouseup", () => holding = false);
+
+// wskaźnik
+let indicatorPos = 0.5;
+let indicatorSpeed = 0.63;
+
+// ramka
+let zoneCenter = 0.5;
+let zoneWidth  = 0.25;
+let targetCenter = 0.5;
+let targetWidth  = 0.25;
+let zoneMode = "move";
+let zoneModeTimer = 0;
+
+// pasek utrzymania
+let progress = 0;
+let requiredTime = 8 + Math.random() * 7;
+
+// kara
+let outsideTimer = 0;
+
+let lastTime = performance.now();
+
+function randomizeZoneBehavior() {
+    if (Math.random() < 0.35) {
+        zoneMode = "stop";
+        targetCenter = zoneCenter;
+        targetWidth  = zoneWidth;
+    } else {
+        zoneMode = "move";
+        targetCenter = 0.1 + Math.random() * 0.8;
+        targetWidth  = 0.12 + Math.random() * 0.28;
+    }
+}
+
+function updateZone(dt) {
+    zoneModeTimer += dt;
+    if (zoneModeTimer > 2) {
+        zoneModeTimer = 0;
+        randomizeZoneBehavior();
+    }
+
+    const lerpSpeed = zoneMode === "move" ? 4.0 : 1.0;
+    zoneCenter += (targetCenter - zoneCenter) * lerpSpeed * dt;
+    zoneWidth  += (targetWidth  - zoneWidth)  * lerpSpeed * dt;
+
+    if (zoneWidth < 0.1) zoneWidth = 0.1;
+    if (zoneWidth > 0.4) zoneWidth = 0.4;
+
+    let left = zoneCenter - zoneWidth / 2;
+    let right = zoneCenter + zoneWidth / 2;
+
+    if (left < 0) {
+        left = 0;
+        zoneCenter = zoneWidth / 2;
+    }
+    if (right > 1) {
+        right = 1;
+        zoneCenter = 1 - zoneWidth / 2;
+    }
+
+    zoneEl.style.left = (left * 100) + "%";
+    zoneEl.style.width = (zoneWidth * 100) + "%";
+}
+
+function updateScoreVisual() {
+    if (score < 0) {
+        scoreBox.classList.remove("safe");
+        scoreBox.classList.add("danger");
+    } else {
+        scoreBox.classList.remove("danger");
+        scoreBox.classList.add("safe");
+    }
+}
+
+function loop(now) {
+    const dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    if (holding) indicatorPos += indicatorSpeed * dt;
+    else indicatorPos -= indicatorSpeed * dt;
+
+    const maxPos = (420 - 22) / 420;
+    indicatorPos = Math.max(0.0, Math.min(maxPos, indicatorPos));
+
+    indicatorEl.style.left = `calc(${indicatorPos * 100}% - 11px)`;
+
+    updateZone(dt);
+
+    const zoneStart = zoneCenter - zoneWidth / 2;
+    const zoneEnd   = zoneCenter + zoneWidth / 2;
+    const inZone = indicatorPos >= zoneStart && indicatorPos <= zoneEnd;
+
+    if (inZone) {
+        progress += dt / requiredTime;
+        if (progress > 1) {
+            score++;
+            scoreBox.textContent = "Punkty: " + score;
+            updateScoreVisual();
+            progress = 0;
+            requiredTime = 8 + Math.random() * 7;
+        }
+    } else {
+        progress -= dt * (0.05 + score * 0.05);
+        if (progress < 0) progress = 0;
+    }
+
+    progressEl.style.width = (progress * 100) + "%";
+
+    if (!inZone && progress === 0) {
+        outsideTimer += dt;
+        if (outsideTimer >= 5) {
+            score--;
+            scoreBox.textContent = "Punkty: " + score;
+            updateScoreVisual();
+
+            gameCard.classList.add("shake");
+            setTimeout(() => gameCard.classList.remove("shake"), 350);
+
+            outsideTimer = 0;
+        }
+    } else {
+        outsideTimer = 0;
+    }
+
+    requestAnimationFrame(loop);
+}
+
+randomizeZoneBehavior();
+requestAnimationFrame(loop);
+</script>
+
+</body>
+</html>

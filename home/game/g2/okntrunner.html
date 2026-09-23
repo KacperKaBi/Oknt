@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>OKNT RUNNER</title>
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #050807;
+    --bg3: #0b1511;
+    --accent: #4caf50;
+    --accent-soft: rgba(76,175,80,0.35);
+    --accent-hard: #00e676;
+    --white-soft: rgba(255,255,255,0.08);
+    --danger: #ff5252;
+}
+
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    color: #ffffff;
+}
+
+/* GAME WRAPPER */
+.game {
+    width: 720px;
+    height: 520px;
+    padding: 18px;
+    background: rgba(0,0,0,0.55);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 40px rgba(0,0,0,0.9);
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 16px;
+}
+
+/* HUD */
+.hud {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.title {
+    font-size: 16px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+}
+
+.stat {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+}
+
+.stat span {
+    color: var(--accent-hard);
+}
+
+/* TERMINAL */
+#log {
+    margin-top: 8px;
+    height: 180px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 8px;
+    overflow-y: auto;
+}
+
+/* hide scrollbar */
+#log {
+    scrollbar-width: none;
+}
+#log::-webkit-scrollbar {
+    display: none;
+}
+
+/* BUTTON PANEL */
+.buttons-panel {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttons-panel button {
+    width: 100%;
+}
+
+/* BUTTONS */
+button {
+    padding: 8px 18px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #ffffff;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+button:hover {
+    background: rgba(255,255,255,0.14);
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(0,0,0,0.6);
+}
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ARENA */
+#arena {
+    width: 460px;
+    height: 460px;
+    background: radial-gradient(circle, rgba(255,255,255,0.03), rgba(0,0,0,0.9));
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+/* PLAYER â€” IMAGE */
+.player {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    background-image: url("character.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* ORB (POINT) â€” WHITE */
+.orb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 12px rgba(255,255,255,0.4);
+    position: absolute;
+}
+
+/* ENEMY */
+.enemy {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 0 16px rgba(255,255,255,0.25);
+    position: absolute;
+}
+
+/* ENEMY HIT */
+.enemy.danger {
+    background: rgba(255,82,82,0.25);
+    border-color: var(--danger);
+    box-shadow: 0 0 18px rgba(255,82,82,0.7);
+}
+
+/* FLASH HIT */
+.flash-hit {
+    animation: flashHit 0.25s ease-out;
+}
+@keyframes flashHit {
+    0% { box-shadow: 0 0 0 rgba(255,82,82,0.0); }
+    50% { box-shadow: 0 0 40px rgba(255,82,82,0.9); }
+    100% { box-shadow: 0 0 0 rgba(255,82,82,0.0); }
+}
+
+/* FLASH SCORE */
+.flash-score {
+    animation: flashScore 0.25s ease-out;
+}
+@keyframes flashScore {
+    0% { box-shadow: 0 0 0 rgba(76,175,80,0.0); }
+    50% { box-shadow: 0 0 40px rgba(76,175,80,0.9); }
+    100% { box-shadow: 0 0 0 rgba(76,175,80,0.0); }
+}
+</style>
+</head>
+<body>
+
+<div class="game">
+    <div id="arena"></div>
+
+    <div class="hud">
+        <div class="title">OKNT RUNNER</div>
+
+        <div class="stat">PUNKTY: <span id="score">0</span></div>
+        <div class="stat">COMBO: <span id="combo">0</span></div>
+        <div class="stat">POZIOM: <span id="level">1</span></div>
+        <div class="stat">ŻYCIA: <span id="lives">3</span></div>
+
+        <div id="log"></div>
+
+        <div class="buttons-panel">
+            <button id="startBtn">START</button>
+            <button id="resetBtn">RESET</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const arena = document.getElementById("arena");
+const scoreEl = document.getElementById("score");
+const comboEl = document.getElementById("combo");
+const levelEl = document.getElementById("level");
+const livesEl = document.getElementById("lives");
+const logEl = document.getElementById("log");
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
+
+const ARENA_SIZE = 460;
+
+let player = null;
+let orbs = [];
+let enemies = [];
+
+let score = 0;
+let combo = 0;
+let level = 1;
+let lives = 3;
+
+let keys = {};
+let running = false;
+let lastTime = performance.now();
+let orbSpawnTimer = 0;
+let enemySpawnTimer = 0;
+
+function log(msg) {
+    const line = document.createElement("div");
+    line.textContent = msg;
+
+    while (logEl.children.length >= 8) {
+        logEl.removeChild(logEl.firstChild);
+    }
+
+    logEl.appendChild(line);
+}
+
+function updateHUD() {
+    scoreEl.textContent = score;
+    comboEl.textContent = combo;
+    levelEl.textContent = level;
+    livesEl.textContent = lives;
+}
+
+function createPlayer() {
+    player = document.createElement("div");
+    player.className = "player";
+    player.style.left = (ARENA_SIZE / 2 - 13) + "px";
+    player.style.top = (ARENA_SIZE / 2 - 13) + "px";
+    arena.appendChild(player);
+}
+
+function resetGame() {
+    score = 0;
+    combo = 0;
+    level = 1;
+    lives = 3;
+    running = false;
+
+    orbs.forEach(o => o.el.remove());
+    enemies.forEach(e => e.el.remove());
+    orbs = [];
+    enemies = [];
+
+    const music = document.getElementById("bg-music");
+    if (music) {
+        music.pause();
+        music.currentTime = 0;
+    }
+
+    if (player) player.remove();
+    createPlayer();
+    updateHUD();
+    logEl.innerHTML = "";
+    log("READY.");
+}
+
+function spawnOrb() {
+    const orbEl = document.createElement("div");
+    orbEl.className = "orb";
+
+    const margin = 20;
+    const x = margin + Math.random() * (ARENA_SIZE - 2 * margin - 10);
+    const y = margin + Math.random() * (ARENA_SIZE - 2 * margin - 10);
+
+    orbEl.style.left = x + "px";
+    orbEl.style.top = y + "px";
+
+    arena.appendChild(orbEl);
+    orbs.push({ el: orbEl, x, y });
+}
+
+function spawnEnemy() {
+    const enemyEl = document.createElement("div");
+    enemyEl.className = "enemy";
+
+    const side = Math.floor(Math.random() * 4);
+    let x, y, vx, vy;
+
+    const speedBase = 40 + level * 10;
+
+    if (side === 0) {
+        x = Math.random() * (ARENA_SIZE - 22);
+        y = -22;
+        vx = (Math.random() - 0.5) * 40;
+        vy = speedBase;
+    } else if (side === 1) {
+        x = Math.random() * (ARENA_SIZE - 22);
+        y = ARENA_SIZE + 22;
+        vx = (Math.random() - 0.5) * 40;
+        vy = -speedBase;
+    } else if (side === 2) {
+        x = -22;
+        y = Math.random() * (ARENA_SIZE - 22);
+        vx = speedBase;
+        vy = (Math.random() - 0.5) * 40;
+    } else {
+        x = ARENA_SIZE + 22;
+        y = Math.random() * (ARENA_SIZE - 22);
+        vx = -speedBase;
+        vy = (Math.random() - 0.5) * 40;
+    }
+
+    enemyEl.style.left = x + "px";
+    enemyEl.style.top = y + "px";
+
+    arena.appendChild(enemyEl);
+    enemies.push({ el: enemyEl, x, y, vx, vy });
+}
+
+function movePlayer(dt) {
+    if (!player) return;
+    let x = parseFloat(player.style.left);
+    let y = parseFloat(player.style.top);
+    const speed = 160 + level * 20;
+
+    if (keys["ArrowUp"] || keys["KeyW"]) y -= speed * dt;
+    if (keys["ArrowDown"] || keys["KeyS"]) y += speed * dt;
+    if (keys["ArrowLeft"] || keys["KeyA"]) x -= speed * dt;
+    if (keys["ArrowRight"] || keys["KeyD"]) x += speed * dt;
+
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > ARENA_SIZE - 26) x = ARENA_SIZE - 26;
+    if (y > ARENA_SIZE - 26) y = ARENA_SIZE - 26;
+
+    player.style.left = x + "px";
+    player.style.top = y + "px";
+}
+
+function updateEnemies(dt) {
+    enemies.forEach((enemy, i) => {
+        enemy.x += enemy.vx * dt;
+        enemy.y += enemy.vy * dt;
+
+        enemy.el.style.left = enemy.x + "px";
+        enemy.el.style.top = enemy.y + "px";
+
+        if (
+            enemy.x < -40 || enemy.x > ARENA_SIZE + 40 ||
+            enemy.y < -40 || enemy.y > ARENA_SIZE + 40
+        ) {
+            enemy.el.remove();
+            enemies.splice(i, 1);
+        }
+    });
+}
+
+function checkCollisions() {
+    if (!player) return;
+    const px = parseFloat(player.style.left) + 13;
+    const py = parseFloat(player.style.top) + 13;
+
+    // ORBS
+    orbs.forEach((orb, i) => {
+        const ox = orb.x + 5;
+        const oy = orb.y + 5;
+        const dx = px - ox;
+        const dy = py - oy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 18) {
+            score += 10 + combo;
+            combo += 1;
+            updateHUD();
+            orb.el.classList.add("flash-score");
+            setTimeout(() => orb.el.remove(), 120);
+            orbs.splice(i, 1);
+
+            if (combo % 5 === 0) {
+                level += 1;
+                log("LEVEL UP " + level);
+                updateHUD();
+            }
+        }
+    });
+
+    // ENEMIES
+    enemies.forEach((enemy, i) => {
+        const ex = enemy.x + 11;
+        const ey = enemy.y + 11;
+        const dx = px - ex;
+        const dy = py - ey;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 20) {
+            lives -= 1;
+            combo = 0;
+            updateHUD();
+            enemy.el.classList.add("danger");
+            arena.classList.add("flash-hit");
+            setTimeout(() => {
+                enemy.el.remove();
+                arena.classList.remove("flash-hit");
+            }, 200);
+            enemies.splice(i, 1);
+            log("HIT! ŻYCIA: " + lives);
+
+            if (lives <= 0) {
+                running = false;
+                pauseMusic();
+                log("GAME OVER.");
+            }
+        }
+    });
+}
+
+function gameLoop(now) {
+    const dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    if (running) {
+        movePlayer(dt);
+        updateEnemies(dt);
+        checkCollisions();
+
+        orbSpawnTimer += dt;
+        enemySpawnTimer += dt;
+
+        if (orbSpawnTimer > 0.9) {
+            spawnOrb();
+            orbSpawnTimer = 0;
+        }
+
+        if (enemySpawnTimer > Math.max(0.4, 1.4 - level * 0.1)) {
+            spawnEnemy();
+            enemySpawnTimer = 0;
+        }
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+document.addEventListener("keydown", e => {
+    keys[e.code] = true;
+});
+
+document.addEventListener("keyup", e => {
+    keys[e.code] = false;
+});
+
+startBtn.onclick = () => {
+    if (!running && lives > 0) {
+        running = true;
+        playMusic();
+        log("RUN.");
+    }
+};
+
+resetBtn.onclick = () => {
+    resetGame();
+};
+
+resetGame();
+requestAnimationFrame(gameLoop);
+
+
+
+</script>
+
+<audio id="bg-music" src="../gramusic.mp3" loop></audio>
+
+<script>
+const bgMusic = document.getElementById("bg-music");
+
+function playMusic() {
+    bgMusic.volume = 0.4;
+    bgMusic.play().catch(() => {});
+}
+
+function pauseMusic() {
+    bgMusic.pause();
+}
+</script>
+
+</body>
+</html>
+
+

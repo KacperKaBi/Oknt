@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Okn't - Gra 2 (Clicker)</title>
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #0b0b0b;
+    --bg3: #111111;
+
+    --white: #ffffff;
+    --white-soft2: rgba(255,255,255,0.06);
+    --white-dim: rgba(255,255,255,0.55);
+    --accent-strong: rgba(255,255,255,0.36);
+    --accent-soft: rgba(255,255,255,0.16);
+    --accent-faint: rgba(255,255,255,0.08);
+}
+
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--white);
+}
+
+/* BACKGROUND GLOW */
+.bg-glow {
+    position: fixed;
+    width: 1400px;
+    height: 1400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 70%);
+    filter: blur(180px);
+    animation: glowMove 16s infinite alternate ease-in-out;
+    pointer-events: none;
+    z-index: 0;
+}
+@keyframes glowMove {
+    0% { transform: translate(-250px, -250px); }
+    50% { transform: translate(250px, -150px); }
+    100% { transform: translate(250px, 250px); }
+}
+
+/* STARS */
+.stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+.stars span {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(255,255,255,0.7);
+    opacity: 0.15;
+    border-radius: 50%;
+    animation: blink 3s infinite ease-in-out;
+}
+.stars span:nth-child(3n) { width: 2px; height: 2px; opacity: 0.11; }
+.stars span:nth-child(5n) { width: 4px; height: 4px; opacity: 0.08; }
+@keyframes blink {
+    0% { opacity: 0.1; transform: translateY(0); }
+    50% { opacity: 0.9; transform: translateY(-6px); }
+    100% { opacity: 0.1; transform: translateY(0); }
+}
+
+/* NOISE */
+.noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    z-index: 2;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+}
+
+/* GAME CARD */
+.game {
+    position: relative;
+    z-index: 5;
+    width: min(700px, calc(100vw - 28px));
+    padding: 34px 36px 30px;
+    background: rgba(0,0,0,0.38);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(14px);
+    border-radius: 14px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.7), inset 0 0 34px rgba(255,255,255,0.025);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.game::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(120deg, rgba(255,255,255,0.22), transparent 26%, rgba(255,255,255,0.08), transparent 78%, rgba(255,255,255,0.16));
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* SCORE */
+#score {
+    font-size: 28px;
+    margin-bottom: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-shadow: 0 0 14px rgba(255,255,255,0.16);
+}
+.score-pop {
+    animation: scorePop 0.18s ease-out;
+}
+@keyframes scorePop {
+    50% { transform: scale(1.06); color: rgba(255,255,255,0.92); }
+}
+
+/* STATUS */
+.status {
+    width: min(600px, 100%);
+    height: 6px;
+    margin-bottom: 18px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.status span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.78), rgba(255,255,255,0.18));
+    box-shadow: 0 0 18px rgba(255,255,255,0.20);
+    transform-origin: left center;
+    animation: statusIdle 2.4s infinite alternate ease-in-out;
+}
+@keyframes statusIdle {
+    from { opacity: 0.65; }
+    to { opacity: 1; }
+}
+
+/* GAME AREA */
+#game {
+    width: min(600px, 100%);
+    height: 360px;
+    background:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+        radial-gradient(circle at center, rgba(255,255,255,0.045), transparent 58%),
+        var(--white-soft2);
+    background-size: 42px 42px, 42px 42px, auto, auto;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 22px rgba(0,0,0,0.8), inset 0 0 32px rgba(255,255,255,0.035);
+}
+#game::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.16));
+    pointer-events: none;
+}
+
+/* TARGET */
+.target {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 50%;
+
+    background-image:
+        url("cel.png"),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0 7%, transparent 8% 100%),
+        radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(255,255,255,0.84) 25% 28%, transparent 29% 100%),
+        radial-gradient(circle at 50% 50%, transparent 0 44%, rgba(255,255,255,0.46) 45% 49%, transparent 50% 100%),
+        radial-gradient(circle, rgba(255,255,255,0.15), rgba(255,255,255,0.08) 54%, transparent 70%);
+    background-size: contain, cover, cover, cover, cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.35));
+    transition: transform 0.08s ease, filter 0.08s ease;
+    animation: targetPulse 1s infinite alternate ease-in-out;
+}
+.target:hover {
+    transform: scale(1.10);
+    filter: drop-shadow(0 0 16px rgba(255,255,255,0.50));
+}
+@keyframes targetPulse {
+    from { box-shadow: 0 0 0 rgba(255,255,255,0); }
+    to { box-shadow: 0 0 24px rgba(255,255,255,0.16); }
+}
+
+/* PARTICLES */
+.particle {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 3;
+    animation: particleFly 0.55s ease-out forwards;
+}
+@keyframes particleFly {
+    to {
+        opacity: 0;
+        transform: translate(var(--x), var(--y)) scale(0.2);
+    }
+}
+
+/* BUTTONS */
+.buttons {
+    margin-top: 22px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button {
+    min-width: 124px;
+    padding: 10px 26px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--white);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+button:hover {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.34);
+    box-shadow: 0 0 18px rgba(255,255,255,0.12);
+    transform: scale(1.05);
+}
+
+/* PAUSE ACTIVE */
+.paused {
+    background: rgba(255,255,255,0.25) !important;
+    box-shadow: 0 0 14px rgba(255,255,255,0.35);
+}
+
+@media (max-width: 560px) {
+    .game {
+        padding: 24px 16px 22px;
+    }
+    #score {
+        font-size: 21px;
+    }
+    #game {
+        height: 320px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="stars"></div>
+<div class="noise"></div>
+
+<div class="game">
+    <div id="score">Punkty: 0</div>
+    <div class="status"><span id="statusBar"></span></div>
+    <div id="game"></div>
+
+    <div class="buttons">
+        <button id="startBtn">START</button>
+        <button id="pauseBtn">PAUZA</button>
+    </div>
+</div>
+
+<script>
+/* STARS */
+const starsContainer = document.querySelector(".stars");
+for (let i = 0; i < 120; i++) {
+    const s = document.createElement("span");
+    s.style.top = Math.random()*100 + "%";
+    s.style.left = Math.random()*100 + "%";
+    s.style.animationDuration = (2 + Math.random()*2) + "s";
+    s.style.animationDelay = Math.random()*2 + "s";
+    starsContainer.appendChild(s);
+}
+
+/* GAME LOGIC */
+const game = document.getElementById("game");
+const scoreBox = document.getElementById("score");
+const pauseBtn = document.getElementById("pauseBtn");
+const statusBar = document.getElementById("statusBar");
+
+let score = 0;
+let currentTarget = null;
+let timeoutID = null;
+let paused = true;
+
+// Tempo zalezy od punktow, ale ma limit grywalnosci.
+const SPAWN_DELAY = 900;
+const BASE_LIFE_TIME = 1200;
+const MIN_LIFE_TIME = 520;
+const SPEED_STEP = 34;
+
+function getLifeTime() {
+    const cleanScore = Math.max(score, 0);
+    return Math.max(MIN_LIFE_TIME, BASE_LIFE_TIME - cleanScore * SPEED_STEP);
+}
+
+function updateScore(points) {
+    score += points;
+    scoreBox.textContent = "Punkty: " + score;
+    scoreBox.classList.remove("score-pop");
+    void scoreBox.offsetWidth;
+    scoreBox.classList.add("score-pop");
+}
+
+function createParticles(x, y) {
+    const colors = [
+        "rgba(255,255,255,0.95)",
+        "rgba(255,255,255,0.70)",
+        "rgba(255,255,255,0.45)",
+        "rgba(255,255,255,0.28)"
+    ];
+
+    for (let i = 0; i < 12; i++) {
+        const p = document.createElement("span");
+        const angle = (Math.PI * 2 * i) / 12;
+        const distance = 28 + Math.random() * 32;
+
+        p.className = "particle";
+        p.style.left = x + "px";
+        p.style.top = y + "px";
+        p.style.background = colors[i % colors.length];
+        p.style.setProperty("--x", Math.cos(angle) * distance + "px");
+        p.style.setProperty("--y", Math.sin(angle) * distance + "px");
+
+        game.appendChild(p);
+        setTimeout(() => p.remove(), 600);
+    }
+}
+
+function resetStatusBar(lifeTime) {
+    statusBar.style.transition = "none";
+    statusBar.style.transform = "scaleX(1)";
+    void statusBar.offsetWidth;
+    statusBar.style.transition = "transform " + lifeTime + "ms linear";
+    statusBar.style.transform = "scaleX(0)";
+}
+
+function stopStatusBar() {
+    statusBar.style.transition = "none";
+    statusBar.style.transform = "scaleX(1)";
+}
+
+function spawnTarget() {
+    if (paused) return;
+
+    if (currentTarget) {
+        updateScore(-1);
+        currentTarget.remove();
+    }
+
+    const target = document.createElement("div");
+    target.className = "target";
+
+    const maxX = game.clientWidth - 90;
+    const maxY = game.clientHeight - 90;
+
+    target.style.left = Math.random() * maxX + "px";
+    target.style.top = Math.random() * maxY + "px";
+
+    target.onclick = () => {
+        updateScore(1);
+        createParticles(target.offsetLeft + 45, target.offsetTop + 45);
+
+        clearTimeout(timeoutID);
+        target.remove();
+        currentTarget = null;
+
+        stopStatusBar();
+        timeoutID = setTimeout(spawnTarget, SPAWN_DELAY);
+    };
+
+    game.appendChild(target);
+    currentTarget = target;
+
+    const lifeTime = getLifeTime();
+    resetStatusBar(lifeTime);
+
+    timeoutID = setTimeout(spawnTarget, lifeTime);
+}
+
+/* BUTTONS */
+document.getElementById("startBtn").onclick = () => {
+    if (!paused) return;
+    paused = false;
+    pauseBtn.textContent = "PAUZA";
+    pauseBtn.classList.remove("paused");
+    spawnTarget();
+};
+
+pauseBtn.onclick = () => {
+    paused = !paused;
+
+    if (paused) {
+        pauseBtn.textContent = "WZNOW";
+        pauseBtn.classList.add("paused");
+        clearTimeout(timeoutID);
+        stopStatusBar();
+        if (currentTarget) currentTarget.remove();
+        currentTarget = null;
+    } else {
+        pauseBtn.textContent = "PAUZA";
+        pauseBtn.classList.remove("paused");
+        spawnTarget();
+    }
+};
+</script>
+
+</body>
+</html>
