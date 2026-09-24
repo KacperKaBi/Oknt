@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Okn't — Terms of Service</title>
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #111111;
+    --bg3: #050505;
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* BACKGROUND GLOW */
+.bg-glow {
+    position: fixed;
+    width: 1100px;
+    height: 1100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
+    filter: blur(140px);
+    animation: glowMove 16s infinite alternate ease-in-out;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes glowMove {
+    0% { transform: translate(-200px, -200px); }
+    50% { transform: translate(200px, -100px); }
+    100% { transform: translate(200px, 200px); }
+}
+
+/* STARS */
+.stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.stars span {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    opacity: 0.18;
+    border-radius: 50%;
+    animation: blink 3s infinite ease-in-out;
+}
+
+@keyframes blink {
+    0% { opacity: 0.1; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-6px); }
+    100% { opacity: 0.1; transform: translateY(0); }
+}
+
+/* NOISE */
+.noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.08;
+    z-index: 2;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+}
+
+/* CONTENT BOX */
+.content {
+    position: relative;
+    z-index: 5;
+    width: 60%;
+    max-width: 900px;
+    background: rgba(0,0,0,0.45);
+    padding: 40px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(255,255,255,0.1);
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+p {
+    margin-bottom: 14px;
+    line-height: 1.6;
+    font-size: 16px;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="stars"></div>
+<div class="noise"></div>
+
+<div class="content">
+    <h1>Terms of Service</h1>
+
+    <p>Korzystając z tej aplikacji, zgadzasz się przestrzegać wszystkich obowiązujących przepisów oraz nie nadużywać usługi.</p>
+
+    <p>Aplikacja jest dostarczana „tak jak jest”, bez jakichkolwiek gwarancji dotyczących działania, dostępności lub bezpieczeństwa.</p>
+
+    <p>Możemy aktualizować niniejsze warunki w dowolnym momencie. Dalsze korzystanie z aplikacji oznacza akceptację zmian.</p>
+</div>
+
+<script>
+const starsContainer = document.querySelector(".stars");
+for (let i = 0; i < 90; i++) {
+    const s = document.createElement("span");
+    s.style.top = Math.random()*100 + "%";
+    s.style.left = Math.random()*100 + "%";
+    s.style.animationDuration = (2 + Math.random()*2) + "s";
+    s.style.animationDelay = Math.random()*2 + "s";
+    starsContainer.appendChild(s);
+}
+</script>
+
+</body>
+</html>
